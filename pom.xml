@@ -10,9 +10,10 @@
     </parent>
     <groupId>com.springboot.ms</groupId>
     <artifactId>springboot-api-example</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>0.0.1</version>
     <name>springboot-api-example</name>
     <description>Spring Boot API Example</description>
+    <packaging>jar</packaging>
 
     <properties>
         <java.version>1.8</java.version>

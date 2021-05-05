@@ -1,0 +1,71 @@
+# Microservice Deployment and Service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: springboot-api-example
+  name: springboot-api-example
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: springboot-api-example
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: springboot-api-example
+  name: springboot-api-example
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: springboot-api-example
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        app: springboot-api-example
+      annotations:
+        sidecar.istio.io/inject: "false"
+    spec:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: environment
+                    operator: In
+                    values:
+                      - "development"
+      tolerations:
+        - effect: NoSchedule
+          key: environment
+          operator: Equal
+          value: development
+      containers:
+        - image: springboot/springboot-api-example:0.0.1
+          name: springboot-api
+          resources:
+            limits:
+              memory: 512Mi
+              cpu: "0.5"
+            requests:
+              memory: 256Mi
+              cpu: "0.1"
+#          envFrom:
+#            - configMapRef:
+#                name: keycloak-config
+#            - secretRef:
+#                name: keycloak-user-pass
+#            - secretRef:
+#                name: keycloak-db-user-pass
+          ports:
+            - name: http
+              containerPort: 8080
