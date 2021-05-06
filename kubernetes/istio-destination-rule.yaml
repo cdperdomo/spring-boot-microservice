@@ -1,0 +1,13 @@
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: spring-boot-microservice
+  namespace: dev-apps
+spec:
+  host: springboot-api-example
+  subsets:
+    - name: v1
+      labels:
+        version: v1
+
+

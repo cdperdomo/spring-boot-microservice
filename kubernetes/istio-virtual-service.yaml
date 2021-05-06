@@ -1,0 +1,20 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: spring-boot-microservice
+  namespace: dev-apps
+spec:
+  gateways:
+    - apps-gateway
+  hosts:
+    - security.osinergmin.gob.pe
+  http:
+    - name: spring-boot-microservice
+      match:
+        - uri:
+            prefix: /spring-boot/
+      rewrite:
+        uri: /
+      route:
+        - destination:
+            host: springboot-api-example

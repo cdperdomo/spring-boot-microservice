@@ -1,0 +1,17 @@
+# Microservice Deployment and Service
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: springboot-api-example
+  name: springboot-api-example
+spec:
+  ports:
+    - name: http
+      protocol: TCP
+      port: 8080
+      targetPort: 8080
+  selector:
+    app: springboot-api-example
+  type: ClusterIP
