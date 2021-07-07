@@ -10,8 +10,8 @@ pipeline {
         stage ('Clone') {
             steps {
                             
-            echo 'Branch Name: ' ${BRANCH}
-            sh 'printenv'
+                echo 'Branch Name: ' + ${BRANCH}
+                sh 'printenv'
                 
                 git branch: 'master', url: "https://github.com/jfrog/project-examples.git"
             }
