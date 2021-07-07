@@ -1,4 +1,5 @@
 pipeline {
+
     agent any
     
     tools { 
@@ -25,7 +26,9 @@ pipeline {
         
         
         stage('Build Image') {
-            echo 'Docker imagename: ' + ${imagename}
+            script {
+                echo 'Docker imagename: ' + ${imagename}
+            }
         }
     }
 }
