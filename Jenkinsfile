@@ -6,8 +6,12 @@ pipeline {
         jdk 'jdk8' 
     }
     
+    environment {
+        imagename = "banrep-openshift/${env.JOB_NAME}"
+    }
+    
     stages {
-        stage ('Clone') {
+        stage ('Clone Git') {
              steps {
                 checkout scm
              }
@@ -15,8 +19,13 @@ pipeline {
         
         stage ('Maven') {
             steps {
-                 sh 'mvn -DskipTests=true install' 
+                 sh 'mvn -q -DskipTests=true install' 
             }
+        }
+        
+        
+        stage('Build Image') {
+            echo 'Docker imagename: ' + ${imagename}
         }
     }
 }
