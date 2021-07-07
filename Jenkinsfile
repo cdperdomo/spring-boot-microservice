@@ -28,6 +28,10 @@ pipeline {
         stage('Build Image') {
             steps {
                 echo "Docker imagename: ${imagename}, ${env.imagename}"
+                
+                script {
+                        dockerImage = docker.build imagename
+                }
             }
         }
     }
