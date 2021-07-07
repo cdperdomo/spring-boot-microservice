@@ -27,7 +27,7 @@ pipeline {
         
         stage('Build Image') {
             steps {
-                echo 'Docker imagename: ' + ${imagename}
+                echo "Docker imagename: ${imagename}, ${env.imagename}"
             }
         }
     }
