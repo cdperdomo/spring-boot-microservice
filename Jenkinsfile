@@ -8,13 +8,7 @@ pipeline {
     
     stages {
         stage ('Clone') {
-            steps {
-                            
-               
-                sh 'printenv'
-                echo "Branch: ${env.GIT_BRANCH}, Git: ${env.GIT_URL}"
-                git branch: "${env.GIT_BRANCH}", url: "${env.GIT_URL}"
-            }
+            checkout scm
         }
         
         stage ('Maven') {
