@@ -13,7 +13,7 @@ pipeline {
                
                 sh 'printenv'
                 
-                git branch: 'master', url: "https://github.com/jfrog/project-examples.git"
+                git branch: ${env.GIT_BRANCH}, url: ${env.GIT_URL}
             }
         }
         
