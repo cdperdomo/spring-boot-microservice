@@ -27,10 +27,11 @@ pipeline {
         
         stage('Build Image') {
             steps {
-                echo "Docker imagename: ${imagename}, ${env.imagename}"
+                echo "Docker imagename: ${imagename}:${env.BUILD_ID}, ${env.imagename}:${env.BUILD_ID}"
                 
-                script {
-                        dockerImage = docker.build imagename
+               script {
+                    def customImage = docker.build("${imagename}:${env.BUILD_ID}")
+                    customImage.push()
                 }
             }
         }
