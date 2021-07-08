@@ -8,7 +8,8 @@ pipeline {
     }
     
     environment {
-        imagename = "banrep-openshift/${env.JOB_NAME}"
+        // registry.gitlab.com/banrep-openshift/springboot-api-example:0.0.3
+        imagename = "banrep-openshift/springboot-api-example"
     }
     
     stages {
