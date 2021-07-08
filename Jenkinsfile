@@ -11,7 +11,7 @@ pipeline {
         // registry.gitlab.com/banrep-openshift/springboot-api-example:0.0.3
         imagename = "banrep-openshift/springboot-api-example"
         finalImageName = '';
-        OCP_CREDENTIALS = credentials('gitlab')
+        OCP_CREDENTIALS = credentials('OCP_TOKEN')
     }
     
     stages {
@@ -52,6 +52,9 @@ pipeline {
             steps {
                 echo "Deploying image: ${finalImageName}"
                 echo "Credentials: ${OCP_CREDENTIALS}"
+                sh '''
+                       oc login --token="${OCP_CREDENTIALS}"
+                   '''
             }
         }
     }
