@@ -55,6 +55,11 @@ pipeline {
                 sh '''
                        oc login --token="${OCP_CREDENTIALS_PSW}" --server=https://api.sandbox-m2.ll9k.p1.openshiftapps.com:6443
                    '''
+                script {
+                    def replicas = sh(returnStdout: true, script: "oc get rc/springboot-api-example-4 -o yaml  | grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f 2 | sed -n '2p'").trim()
+                    echo "#Replicas: ${replicas}"
+                }
+            
             }
         }
     }
