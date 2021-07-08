@@ -51,9 +51,9 @@ pipeline {
         stage('Deploy Openshift') {
             steps {
                 echo "Deploying image: ${finalImageName}"
-                echo "Credentials: ${OCP_CREDENTIALS}"
+                echo "Credentials: ${OCP_CREDENTIALS_PSW}"
                 sh '''
-                       oc login --token="${OCP_CREDENTIALS}"
+                       oc login --token="${OCP_CREDENTIALS_PSW}"
                    '''
             }
         }
