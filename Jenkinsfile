@@ -11,6 +11,7 @@ pipeline {
         // registry.gitlab.com/banrep-openshift/springboot-api-example:0.0.3
         imagename = "banrep-openshift/springboot-api-example"
         finalImageName = '';
+        OCP_CREDENTIALS = credentials('gitlab')
     }
     
     stages {
@@ -39,7 +40,8 @@ pipeline {
 
                         // Push the image to a private repository
                         customImage.push()
-                       
+                        
+                        // Getting image name
                         finalImageName = customImage.imageName()
                     }
                 }
@@ -49,6 +51,7 @@ pipeline {
         stage('Deploy Openshift') {
             steps {
                 echo "Deploying image: ${finalImageName}"
+                echo "Credentials: ${OCP_CREDENTIALS}"
             }
         }
     }
