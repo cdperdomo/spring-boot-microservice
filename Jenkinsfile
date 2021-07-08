@@ -53,7 +53,7 @@ pipeline {
                 echo "Deploying image: ${finalImageName}"
                 echo "Credentials: ${OCP_CREDENTIALS_PSW}"
                 sh '''
-                       oc login --token="${OCP_CREDENTIALS_PSW}"
+                       oc login --token="${OCP_CREDENTIALS_PSW}" --server=https://api.sandbox-m2.ll9k.p1.openshiftapps.com:6443
                    '''
             }
         }
