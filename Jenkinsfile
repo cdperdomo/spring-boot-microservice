@@ -30,8 +30,19 @@ pipeline {
                 echo "Docker imagename: ${imagename}:${env.BUILD_ID}, ${env.imagename}:${env.BUILD_ID}"
                 
                script {
-                    def customImage = docker.build("${imagename}:${env.BUILD_ID}")
-                    customImage.push()
+                   
+                   docker.withRegistry('https://registry.gitlab.com', 'gitlab') {
+
+                        def customImage = docker.build("${imagename}:${env.BUILD_ID}")
+
+                        /* Push the container to the custom Registry */
+                        customImage.push()
+                    }
+                    // Build de Image
+                    //def customImage = docker.build("${imagename}:${env.BUILD_ID}")
+                    
+                   // Push image to private repository
+                   //
                 }
             }
         }
