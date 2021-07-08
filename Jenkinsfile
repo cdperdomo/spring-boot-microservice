@@ -10,6 +10,7 @@ pipeline {
     environment {
         // registry.gitlab.com/banrep-openshift/springboot-api-example:0.0.3
         imagename = "banrep-openshift/springboot-api-example"
+        finalImageName = '';
     }
     
     stages {
@@ -26,25 +27,28 @@ pipeline {
         }
         
         
-        stage('Build Image') {
+        stage('Build and Push Image') {
             steps {
                 echo "Docker imagename: ${imagename}:${env.BUILD_ID}, ${env.imagename}:${env.BUILD_ID}"
                 
                script {
                    
                    docker.withRegistry('https://registry.gitlab.com', 'gitlab') {
-
+                        // Build de Image
                         def customImage = docker.build("${imagename}:${env.BUILD_ID}")
 
-                        /* Push the container to the custom Registry */
+                        // Push the image to a private repository
                         customImage.push()
+                       
+                        finalImageName = customImage.imageName()
                     }
-                    // Build de Image
-                    //def customImage = docker.build("${imagename}:${env.BUILD_ID}")
-                    
-                   // Push image to private repository
-                   //
                 }
+            }
+        }
+        
+        stage('Deploy Openshift') {
+            steps {
+                echo "Deploying image: ${finalImageName}"
             }
         }
     }
