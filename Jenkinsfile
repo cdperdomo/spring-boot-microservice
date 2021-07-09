@@ -53,8 +53,8 @@ pipeline {
             steps {
                 echo "Deploying image: ${finalImageName}"
                 script {
-                    openshift.withCluster() {
-                        openshift.withProject(env.namespace) {
+                    openshift.withCluster("openshift") {
+                        openshift.withProject() {
 							def dcExists = openshift.selector("dc", "${appName}").exists() 
 							if (dcExists) {
 								echo "The app ${appName} exists"
