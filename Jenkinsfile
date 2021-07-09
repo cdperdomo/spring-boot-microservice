@@ -9,6 +9,7 @@ pipeline {
     
     environment {
         // registry.gitlab.com/banrep-openshift/springboot-api-example:0.0.3
+        appName = "springboot-api-example"
         imagename = "banrep-openshift/springboot-api-example"
         finalImageName = '';
         OCP_CREDENTIALS = credentials('OCP_TOKEN')
@@ -57,9 +58,32 @@ pipeline {
                        oc login --token="${OCP_CREDENTIALS_PSW}" --server=https://api.sandbox-m2.ll9k.p1.openshiftapps.com:6443
                    '''
                 script {
+                    // Validate if application exists
+                    def dc = sh(returnStdout: true, script: "oc get dc -o=jsonpath='{.items[].metadata.name}' | grep ${appName}").trim()
+                     echo "#DeploymentConfig: ${dc}"
+                    
+                    if (dc.contains("${appName}")) {
+                         echo "The app ${appName} already exists"
+                        /*
+                        sh '''
+                              oc import-image
+                              oc tag
+                             
+                           ''' */
+                    } else {
+                        echo "The app does not exists .........................."
+                         /*sh '''
+                              oc import-image
+                              oc tag
+                              oc new-app
+                           ''' */
+                    }
+                
+                    // validate number of replicas
+                    /*
                     def replicas = sh(returnStdout: true, script: "oc get rc/springboot-api-example-6 -o yaml  | grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f 2 | sed -n '2p'").trim()
                     echo "#Replicas: ${replicas}"
-                    /*
+                    
                     if(replicas.contains("0")) {
                          echo "No hay replicas !!!!!!!"
                         
@@ -67,14 +91,6 @@ pipeline {
                        echo "#Replicas mayor a 0"
                     }
                     */
-                    def dc = sh(returnStdout: true, script: "oc get dc -o=jsonpath='{.items[].metadata.name}' | grep springboot-api-example").trim()
-                     echo "#DeploymentConfig: ${dc}"
-                    
-                    if (dc.contains("springboot-api-example")) {
-                         echo "The app already exists"
-                    } else {
-                        echo "The app does not exists .........................."
-                    }
                 }
             
             }
@@ -82,15 +98,15 @@ pipeline {
     }
     
     post {
-                success {
-                    script {
-                        echo "success"
-                    }
-                }
-                failure {
-                    script {
-                        echo "failure"
-                    }
-                }
-            }     
+        success {
+            script {
+                echo "success"
+            }
+        }
+        failure {
+            script {
+                echo "failure"
+            }
+        }
+    }     
 }
