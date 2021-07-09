@@ -72,6 +72,7 @@ pipeline {
                            ''' */
                     } else {
                         echo "The app does not exists .........................."
+                        throw new Exception("The app ${appName}  does not exists!")
                          /*sh '''
                               oc import-image
                               oc tag
