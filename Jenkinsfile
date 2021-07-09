@@ -53,61 +53,17 @@ pipeline {
         stage('Deploy Openshift') {
             steps {
                 echo "Deploying image: ${finalImageName}"
-                echo "Credentials: ${OCP_CREDENTIALS_PSW}"
-                sh '''
-                       oc login --token="${OCP_CREDENTIALS_PSW}" --server=https://api.sandbox-m2.ll9k.p1.openshiftapps.com:6443
-                   '''
                 script {
-                    // Validate if application exists
-                    def dc = sh(returnStdout: true, script: "oc get dc -o=jsonpath='{.items[].metadata.name}' | grep  XXXXX > /dev/null && echo ${appName} || echo null").trim()
-                     echo "#DeploymentConfig: ${dc}"
-                    
-                    if (dc.contains("${appName}")) {
-                         echo "The app ${appName} already exists"
-                        /*
-                        sh '''
-                              oc import-image
-                              oc tag
-                             
-                           ''' */
-                    } else {
-                        echo "The app does not exists .........................."
-                        throw new Exception("The app ${appName}  does not exists!")
-                         /*sh '''
-                              oc import-image
-                              oc tag
-                              oc new-app
-                           ''' */
-                    }
-                
-                    // validate number of replicas
-                    /*
-                    def replicas = sh(returnStdout: true, script: "oc get rc/springboot-api-example-6 -o yaml  | grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f 2 | sed -n '2p'").trim()
-                    echo "#Replicas: ${replicas}"
-                    
-                    if(replicas.contains("0")) {
-                         echo "No hay replicas !!!!!!!"
-                        
-                    } else {
-                       echo "#Replicas mayor a 0"
-                    }
-                    */
+                    openshift.withCluster() {
+                        openshift.withProject(env.namespace) {
+                        def dcExists = openshift.selector("dc", "${appName}").exists() 
+                        if (dcExists) {
+                            echo "The app ${appName} exists"
+                        } else {
+                            echo "Eror: the app ${appName} doesn't exist!"
+                        }
                 }
-            
             }
         }
     }
-    
-    post {
-        success {
-            script {
-                echo "success"
-            }
-        }
-        failure {
-            script {
-                echo "failure"
-            }
-        }
-    }     
 }
