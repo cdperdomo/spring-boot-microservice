@@ -59,7 +59,7 @@ pipeline {
 				echo " Importing Image: oc import-image ${imagename}:${env.BUILD_ID} --from=${finalImageName} --confirm"
 				//sh " oc import-image ${imagename}:${env.BUILD_ID} --from=${finalImageName} --confirm "
 				def raw  = openshift.raw("import-image ${imagename}:${env.BUILD_ID} --from=${finalImageName} --confirm ")
-				echo " Tag: ${raw} "
+				echo "Import Image: ${raw} "
 				
 				// tag image
 				def tag = openshift.tag("${appName}:${env.BUILD_ID}", "${appName}:latest")
