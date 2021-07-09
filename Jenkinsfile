@@ -57,8 +57,7 @@ pipeline {
                         openshift.withProject() {
 				// Import image
 				echo " Importing Image: oc import-image ${imagename}:${env.BUILD_ID} --from=${finalImageName} --confirm"
-				def result = openshift._import(" ${imagename}:${env.BUILD_ID} --from=${finalImageName} --confirm") 
-				echo "### result ${result.status} ###"
+				sh " oc import-image ${imagename}:${env.BUILD_ID} --from=${finalImageName} --confirm "
 				
 				def dcExists = openshift.selector("dc", "${appName}").exists() 
 				if (dcExists) {
