@@ -47,7 +47,6 @@ pipeline {
                     }
                 }
             }
-          
         }
         
         stage('Deploy Openshift') {
@@ -62,6 +61,7 @@ pipeline {
                         } else {
                             echo "Eror: the app ${appName} doesn't exist!"
                         }
+                    }
                 }
             }
         }
