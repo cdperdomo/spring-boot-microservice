@@ -59,18 +59,19 @@ pipeline {
 				echo " Importing Image: oc import-image ${imagename}:${env.BUILD_ID} --from=${finalImageName} --confirm"
 				//sh " oc import-image ${imagename}:${env.BUILD_ID} --from=${finalImageName} --confirm "
 				def raw  = openshift.raw("import-image ${imagename}:${env.BUILD_ID} --from=${finalImageName} --confirm ")
-				echo "Import Image: ${raw} "
+				echo "Import Image Status: ${raw.status} "
 				
 				// tag image
 				def tag = openshift.tag("${appName}:${env.BUILD_ID}", "${appName}:latest")
-				echo " Tag: ${tag.status} "
+				echo " Tag Status: ${tag.status} "
 				
 				def dcExists = openshift.selector("dc", "${appName}").exists() 
 				if (dcExists) {
 					echo "The app ${appName} exists"
 				} else {
 					echo "Eror: the app ${appName} doesn't exist!"
-					def newApp = openshift.newApp("${appName}:${env.BUILD_ID}", "${appName}:latest")
+					
+					def newApp = openshift.newApp("--name=${appName}", "--image-stream=${appName}:latest", "--as-deployment-config")
 				}
 			}
 		    }
