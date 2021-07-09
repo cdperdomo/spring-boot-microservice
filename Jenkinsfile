@@ -59,12 +59,21 @@ pipeline {
                 script {
                     def replicas = sh(returnStdout: true, script: "oc get rc/springboot-api-example-6 -o yaml  | grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f 2 | sed -n '2p'").trim()
                     echo "#Replicas: ${replicas}"
-                    
+                    /*
                     if(replicas.contains("0")) {
                          echo "No hay replicas !!!!!!!"
                         
                     } else {
                        echo "#Replicas mayor a 0"
+                    }
+                    */
+                    def dc = sh(returnStdout: true, script: "oc get dc -o=jsonpath='{.items[].metadata.name}' | grep springboot-api-example").trim()
+                     echo "#DeploymentConfig: ${dc}"
+                    
+                    if (dc.contains("springboot-api-example")) {
+                         echo "The app already exists"
+                    } else {
+                        echo "The app does not exists .........................."
                     }
                 }
             
