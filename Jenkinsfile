@@ -55,13 +55,14 @@ pipeline {
                 script {
                     openshift.withCluster() {
                         openshift.withProject(env.namespace) {
-                        def dcExists = openshift.selector("dc", "${appName}").exists() 
-                        if (dcExists) {
-                            echo "The app ${appName} exists"
-                        } else {
-                            echo "Eror: the app ${appName} doesn't exist!"
-                        }
-                    }
+							def dcExists = openshift.selector("dc", "${appName}").exists() 
+							if (dcExists) {
+								echo "The app ${appName} exists"
+							} else {
+								echo "Eror: the app ${appName} doesn't exist!"
+							}
+						}
+					}
                 }
             }
         }
