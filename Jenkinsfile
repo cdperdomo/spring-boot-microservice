@@ -31,7 +31,7 @@ pipeline {
         stage('Build and Push Image') {
             steps {
                 echo "Docker imagename: ${imagename}:${env.BUILD_ID}, ${env.imagename}:${env.BUILD_ID}"
-                
+              /*  
                script {
                    
                    docker.withRegistry('https://registry.gitlab.com', 'gitlab') {
@@ -45,7 +45,9 @@ pipeline {
                         finalImageName = customImage.imageName()
                     }
                 }
+                  */
             }
+          
         }
         
         stage('Deploy Openshift') {
@@ -56,7 +58,7 @@ pipeline {
                        oc login --token="${OCP_CREDENTIALS_PSW}" --server=https://api.sandbox-m2.ll9k.p1.openshiftapps.com:6443
                    '''
                 script {
-                    def replicas = sh(returnStdout: true, script: "oc get rc/springboot-api-example-4 -o yaml  | grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f 2 | sed -n '2p'").trim()
+                    def replicas = sh(returnStdout: true, script: "oc get rc/springboot-api-example-6 -o yaml  | grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f 2 | sed -n '2p'").trim()
                     echo "#Replicas: ${replicas}"
                     
                     if(replicas.contains("0")) {
