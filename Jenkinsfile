@@ -59,8 +59,7 @@ pipeline {
                    '''
                 script {
                     // Validate if application exists
-                    def dc = sh(returnStdout: true, script: "oc get dc -o=jsonpath='{.items[].metadata.name}' | grep  ${appName} > /dev/null && echo ${appName} || echo null"
-").trim()
+                    def dc = sh(returnStdout: true, script: "oc get dc -o=jsonpath='{.items[].metadata.name}' | grep  ${appName} > /dev/null && echo ${appName} || echo null").trim()
                      echo "#DeploymentConfig: ${dc}"
                     
                     if (dc.contains("${appName}")) {
