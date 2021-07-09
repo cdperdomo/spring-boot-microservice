@@ -31,7 +31,7 @@ pipeline {
         stage('Build and Push Image') {
             steps {
                 echo "Docker imagename: ${imagename}:${env.BUILD_ID}, ${env.imagename}:${env.BUILD_ID}"
-              /*  
+              
                script {
                    
                    docker.withRegistry('https://registry.gitlab.com', 'gitlab') {
@@ -45,7 +45,6 @@ pipeline {
                         finalImageName = customImage.imageName()
                     }
                 }
-                  */
             }
           
         }
