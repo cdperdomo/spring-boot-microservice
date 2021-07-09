@@ -59,6 +59,10 @@ pipeline {
 				echo " Importing Image: oc import-image ${imagename}:${env.BUILD_ID} --from=${finalImageName} --confirm"
 				sh " oc import-image ${imagename}:${env.BUILD_ID} --from=${finalImageName} --confirm "
 				
+				// tag image
+				def tag = openshift.tag("${appName}:${env.BUILD_ID}", "${appName}:latest")
+				echo " Tag: ${tag.status} "
+				
 				def dcExists = openshift.selector("dc", "${appName}").exists() 
 				if (dcExists) {
 					echo "The app ${appName} exists"
