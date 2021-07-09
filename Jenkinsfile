@@ -82,7 +82,7 @@ pipeline {
 }
 
 def log(String appName) {
-	echos "LOg............................ " + appName
+	echo "Log............................ " + appName
 }
 
 def createNewApp(String appName) {
