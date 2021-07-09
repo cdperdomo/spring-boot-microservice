@@ -72,7 +72,7 @@ pipeline {
 					createNewApp(${appName})
 			        }
 				
-				log(${appName})
+				log("${appName}")
 			}
 		    }
                 }
