@@ -59,16 +59,28 @@ pipeline {
                     def replicas = sh(returnStdout: true, script: "oc get rc/springboot-api-example-4 -o yaml  | grep -A 5  'status:' |grep 'replicas:' | cut -d ':' -f 2 | sed -n '2p'").trim()
                     echo "#Replicas: ${replicas}"
                     
-                    if(replicas > 0) {
+                    if(replicas.contains("0")) {
+                         echo "No hay replicas !!!!!!!"
                         
-                        echo "#Replicas mayor a 0"
                     } else {
-                        
-                        echo "No hay replicas !!!!!!!"
+                       echo "#Replicas mayor a 0"
                     }
                 }
             
             }
         }
     }
+    
+    post {
+                success {
+                    script {
+                        echo "success"
+                    }
+                }
+                failure {
+                    script {
+                        echo "failure"
+                    }
+                }
+            }     
 }
