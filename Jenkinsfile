@@ -55,14 +55,19 @@ pipeline {
                 script {
                     openshift.withCluster("openshift") {
                         openshift.withProject() {
-							def dcExists = openshift.selector("dc", "${appName}").exists() 
-							if (dcExists) {
-								echo "The app ${appName} exists"
-							} else {
-								echo "Eror: the app ${appName} doesn't exist!"
-							}
-						}
-					}
+				// Import image
+				echo " Importing Image: oc import-image ${imagename}:${env.BUILD_ID} --from=${finalImageName} --confirm"
+				def result = openshift.exe("oc import-image ${imagename}:${env.BUILD_ID} --from=${finalImageName} --confirm") 
+				echo "### result ${result.status} ###"
+				
+				def dcExists = openshift.selector("dc", "${appName}").exists() 
+				if (dcExists) {
+					echo "The app ${appName} exists"
+				} else {
+					echo "Eror: the app ${appName} doesn't exist!"
+				}
+			}
+		    }
                 }
             }
         }
