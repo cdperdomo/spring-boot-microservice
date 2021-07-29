@@ -70,26 +70,22 @@ pipeline {
 				if (dcExists) {
 					echo "The app ${appName} exists"
 				} else {
-					createNewApp(${appName})
-			        }
+					// Since the application does not exist we need to create a new app
+					echo "The app ${appName} doesn't exist!"
+
+					def dcs = openshift.newApp("--name=${appName}", "--image-stream=${appName}:latest", "--as-deployment-config").narrow('dc')
+					def dc = dcs.object()
+
+					// dc is not a Selector -- It is a Groovy Map which models the content of the DC
+					// new-app created at the time object() was called. Changes to the model are not
+					// reflected back to the API server, but the DC's content is at our fingertips.
+					echo "new-app created a ${dc.kind} with name ${dc.metadata.name}"
+					echo "The object has labels: ${dc.metadata.labels}"
+			     }
 			}
 		    }
                 }
             }
         }
     }
-}
-
-def createNewApp(String appName) {
-	// Since the application does not exist we need to create a new app
-	echo "The app ${appName} doesn't exist!"
-
-	def dcs = openshift.newApp("--name=${appName}", "--image-stream=${appName}:latest", "--as-deployment-config").narrow('dc')
-	def dc = dcs.object()
-
-	// dc is not a Selector -- It is a Groovy Map which models the content of the DC
-	// new-app created at the time object() was called. Changes to the model are not
-	// reflected back to the API server, but the DC's content is at our fingertips.
-	echo "new-app created a ${dc.kind} with name ${dc.metadata.name}"
-	echo "The object has labels: ${dc.metadata.labels}"
 }
