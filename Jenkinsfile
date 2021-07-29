@@ -61,6 +61,7 @@ pipeline {
 				echo "Import Image Status: ${raw.status} "
 				
 				// tag image
+				echo "Tag from ${appName}:${env.BUILD_ID} to ${appName}:latest"
 				def tag = openshift.tag("${appName}:${env.BUILD_ID}", "${appName}:latest")
 				echo " Tag Status: ${tag.status} "
 				
@@ -71,18 +72,12 @@ pipeline {
 				} else {
 					createNewApp(${appName})
 			        }
-				
-				log("${appName}")
 			}
 		    }
                 }
             }
         }
     }
-}
-
-def log(String appName) {
-	echo "Log............................ " + appName
 }
 
 def createNewApp(String appName) {
